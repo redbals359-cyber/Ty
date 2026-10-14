@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Culture Quest | Jelajahi Budaya Indonesia</title>
+
+<style>
+:root {
+  --bg: #10151c;
+  --card: #1b2430;
+  --gold: #f5c76b;
+  --text: #f4f4f4;
+  --muted: #b8c0cc;
+  --green: #66d6a3;
+  --red: #ff8585;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  line-height: 1.7;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+  border: none;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 7%;
+  border-bottom: 1px solid #ffffff18;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #10151cf2;
+  backdrop-filter: blur(12px);
+}
+
+.logo {
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 1.15rem;
+}
+
+.score {
+  background: #ffffff12;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+main {
+  width: min(1050px, 90%);
+  margin: auto;
+}
+
+/* INTRO */
+
+.intro {
+  min-height: 88vh;
+  padding: 65px 0 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+  background:
+    radial-gradient(ellipse at top right, #6b512526, transparent 50%);
+  scroll-margin-top: 80px;
+}
+
+.intro-text {
+  max-width: 680px;
+}
+
+.intro-label {
+  display: inline-block;
+  color: var(--gold);
+  border: 1px solid #f5c76b66;
+  border-radius: 30px;
+  padding: 5px 14px;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+.intro-text h1 {
+  font-size: clamp(2.7rem, 7vw, 5rem);
+  line-height: 1.1;
+  margin-bottom: 18px;
+}
+
+.intro-text h1 span {
+  color: var(--gold);
+}
+
+.intro-text p {
+  color: var(--muted);
+  max-width: 550px;
+  margin-bottom: 24px;
+}
+
+.primary {
+  padding: 12px 22px;
+  background: var(--gold);
+  color: #171717;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.intro-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+}
+
+.intro-image {
+  height: 290px;
+  min-width: 0;
+  position: relative;
+  background: #080c12;
+  border: 1px solid #ffffff20;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.intro-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.image-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 35px 18px 15px;
+  background: linear-gradient(transparent, #080b10ed);
+  pointer-events: none;
+}
+
+.image-caption span {
+  color: var(--gold);
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+}
+
+.image-caption h3 {
+  font-size: 1.15rem;
+}
+
+.intro-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  color: #8f9aa8;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+}
+
+/* SECTION */
+
+section.content-section {
+  padding: 45px 0;
+  scroll-margin-top: 75px;
+}
+
+.section-heading {
+  margin-bottom: 24px;
+}
+
+.section-heading h2 {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+}
+
+.section-heading p {
+  color: var(--muted);
+}
+
+.culture-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.culture-card {
+  background: var(--card);
+  border: 1px solid #ffffff12;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.culture-image {
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #080c12;
+  padding: 10px;
+}
+
+.culture-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.tag {
+  color: var(--gold);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.card-content h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.card-content p {
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.fact-box {
+  border-left: 3px solid var(--gold);
+  background: #ffffff08;
+  padding: 10px 12px;
+  margin: 15px 0;
+  font-size: 0.9rem;
+}
+
+.text-button {
+  background: transparent;
+  color: var(--gold);
+  font-weight: bold;
+  padding: 8px 0;
+}
+
+.extra {
+  display: none;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.extra.show {
+  display: block;
+}
+
+/* QUIZ */
+
+.quiz-box {
+  background: var(--card);
+  border: 1px solid #ffffff12;
+  border-radius: 18px;
+  padding: 25px;
+}
+
+.quiz-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+
+.progress {
+  height: 6px;
+  background: #ffffff15;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.3s;
+}
+
+#question {
+  font-size: 1.25rem;
+  margin-bottom: 20px;
+}
+
+.answers {
+  display: grid;
+  gap: 12px;
+}
+
+.answer {
+  width: 100%;
+  padding: 13px 15px;
+  text-align: left;
+  color: var(--text);
+  background: #ffffff08;
+  border: 1px solid #ffffff20;
+  border-radius: 11px;
+  transition: 0.2s;
+}
+
+.answer:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: #f5c76b12;
+}
+
+.answer.correct {
+  border-color: var(--green);
+  background: #66d6a315;
+}
+
+.answer.wrong {
+  border-color: var(--red);
+  background: #ff858515;
+}
+
+.answer:disabled {
+  cursor: default;
+}
+
+.feedback {
+  margin: 18px 0;
+  color: var(--muted);
+}
+
+.quiz-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#nextBtn {
+  display: none;
+}
+
+#result {
+  display: none;
+  text-align: center;
+  padding: 25px 0;
+}
+
+#result h3 {
+  color: var(--gold);
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+#result p {
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+/* FOOTER */
+
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  margin-top: 35px;
+  border-top: 1px solid #ffffff15;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  header {
+    padding: 15px 5%;
+  }
+
+  main {
+    width: 90%;
+  }
+
+  .intro {
+    min-height: auto;
+    padding-top: 50px;
+  }
+
+  .intro-images,
+  .culture-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intro-image {
+    height: 260px;
+  }
+
+  .culture-image {
+    height: 250px;
+  }
+
+  .quiz-box {
+    padding: 18px;
+  }
+
+  .quiz-top {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">✦ CULTURE QUEST</div>
+  <div class="score">⭐ Skor: <span id="totalScore">0</span></div>
+</header>
+
+<main>
+
+  <!-- HALAMAN PERKENALAN -->
+
+  <section class="intro" id="home">
+
+    <div class="intro-text">
+      <div class="intro-label">🇮🇩 CULTURAL ADVENTURE</div>
+
+      <h1>Culture <span>Quest</span></h1>
+
+      <p>
+        Setiap budaya menyimpan cerita.
+        Jelajahi kekayaan Indonesia melalui seni tari,
+        rumah adat, dan pengetahuan yang menarik.
+        Baca, pelajari, lalu uji pengetahuanmu!
+      </p>
+
+      <button class="primary" onclick="startQuest()">
+        Mulai Petualangan →
+      </button>
+    </div>
+
+    <div class="intro-images">
+
+      <div class="intro-image">
+        <img
+          src="https://raw.githubusercontent.com/redbals359-cyber/Ty/main/1791984857152.png"
+          alt="Tarian tradisional Indonesia"
+        >
+        <div class="image-caption">
+          <span>SENI TARI</span>
+          <h3>Tari Tradisional</h3>
+        </div>
+      </div>
+
+      <div class="intro-image">
+        <img
+          src="https://raw.githubusercontent.com/redbals359-cyber/Ty/main/eb7155ad2d8a5e1de228e78d26e655cf.jpg"
+          alt="Rumah Gadang"
+        >
+        <div class="image-caption">
+          <span>ARSITEKTUR</span>
+          <h3>Rumah Gadang</h3>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="intro-footer">
+      <span>EXPLORE</span>
+      <span>LEARN</span>
+      <span>PRESERVE CULTURE</span>
+    </div>
+
+  </section>
+
+  <!-- GALERI BUDAYA -->
+
+  <section class="content-section" id="explore">
+
+    <div class="section-heading">
+      <h2>📚 Galeri Budaya</h2>
+      <p>Kenali dua warisan budaya dari Sumatera Barat.</p>
+    </div>
+
+    <div class="culture-grid">
+
+      <article class="culture-card">
+
+        <div class="culture-image">
+          <img
+            src="https://raw.githubusercontent.com/redbals359-cyber/Ty/main/1791984857152.png"
+            alt="Tarian tradisional"
+            loading="lazy"
+          >
+        </div>
+
+        <div class="card-content">
+          <div class="tag">SUMATERA BARAT · SENI TARI</div>
+          <h3>Tari Piring</h3>
+
+          <p>
+            Tari Piring merupakan tarian tradisional masyarakat
+            Minangkabau yang berasal dari Solok, Sumatera Barat.
+            Penari membawa piring sambil melakukan gerakan yang
+            lincah dan terkoordinasi.
+          </p>
+
+          <div class="fact-box">
+            <strong>Fakta Budaya</strong><br>
+            Asal: Solok, Sumatera Barat.<br>
+            Properti utama: piring.
+          </div>
+
+          <button class="text-button"
+            onclick="toggleExtra('danceExtra', this)">
+            Baca selengkapnya ↓
+          </button>
+
+          <div class="extra" id="danceExtra">
+            Tari Piring menunjukkan kelincahan, keseimbangan,
+            dan koordinasi gerak penari. Tarian ini menjadi
+            salah satu kekayaan budaya Minangkabau yang
+            perlu dikenal dan dilestarikan.
+          </div>
+        </div>
+
+      </article>
+
+      <article class="culture-card">
+
+        <div class="culture-image">
+          <img
+            src="https://raw.githubusercontent.com/redbals359-cyber/Ty/main/eb7155ad2d8a5e1de228e78d26e655cf.jpg"
+            alt="Rumah Gadang"
+            loading="lazy"
+          >
+        </div>
+
+        <div class="card-content">
+          <div class="tag">SUMATERA BARAT · ARSITEKTUR</div>
+          <h3>Rumah Gadang</h3>
+
+          <p>
+            Rumah Gadang adalah rumah adat masyarakat
+            Minangkabau di Sumatera Barat. Ciri khasnya
+            adalah atap melengkung dan meruncing seperti
+            tanduk kerbau.
+          </p>
+
+          <div class="fact-box">
+            <strong>Fakta Budaya</strong><br>
+            Asal: Sumatera Barat.<br>
+            Ciri khas: atap bergonjong.
+          </div>
+
+          <button class="text-button"
+            onclick="toggleExtra('houseExtra', this)">
+            Baca selengkapnya ↓
+          </button>
+
+          <div class="extra" id="houseExtra">
+            Bagian atap yang melengkung dan meruncing disebut
+            gonjong. Rumah Gadang digunakan sebagai tempat
+            tinggal dan memiliki peran penting dalam kegiatan
+            adat masyarakat Minangkabau.
+          </div>
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+  <!-- KUIS -->
+
+  <section class="content-section" id="quiz">
+
+    <div class="section-heading">
+      <h2>🎯 Uji Pengetahuanmu</h2>
+      <p>Jawab lima pertanyaan untuk mendapatkan poin.</p>
+    </div>
+
+    <div class="quiz-box">
+
+      <div id="quizContent">
+
+        <div class="quiz-top">
+          <span id="questionNumber">Pertanyaan 1 dari 5</span>
+          <span>10 poin untuk jawaban benar</span>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <h3 id="question"></h3>
+
+        <div class="answers" id="answers"></div>
+
+        <p class="feedback" id="feedback" aria-live="polite"></p>
+
+        <div class="quiz-controls">
+          <span id="currentPoints">Poin: 0</span>
+          <button class="primary" id="nextBtn"
+            onclick="nextQuestion()">
+            Berikutnya →
+          </button>
+        </div>
+
+      </div>
+
+      <div id="result">
+        <h3 id="resultTitle">Petualangan Selesai!</h3>
+        <p id="resultText"></p>
+        <button class="primary" onclick="restartQuiz()">
+          Ulangi Kuis ↻
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  CULTURE QUEST · Belajar budaya, menjaga warisan Indonesia 🇮🇩
+</footer>
+
+<script>
+const questions = [
+  {
+    question: "Tari Piring berasal dari daerah mana?",
+    options: [
+      "Jawa Barat",
+      "Solok, Sumatera Barat",
+      "Bali",
+      "Papua"
+    ],
+    answer: 1,
+    explanation:
+      "Tari Piring merupakan tarian tradisional yang berasal dari Solok, Sumatera Barat."
+  },
+
+  {
+    question: "Apa properti utama Tari Piring?",
+    options: [
+      "Kipas",
+      "Payung",
+      "Piring",
+      "Selendang"
+    ],
+    answer: 2,
+    explanation:
+      "Piring digunakan sebagai properti utama dalam Tari Piring."
+  },
+
+  {
+    question: "Rumah Gadang merupakan rumah adat masyarakat...",
+    options: [
+      "Minangkabau",
+      "Betawi",
+      "Dayak",
+      "Asmat"
+    ],
+    answer: 0,
+    explanation:
+      "Rumah Gadang merupakan rumah adat masyarakat Minangkabau."
+  },
+
+  {
+    question: "Apa nama bagian atap khas Rumah Gadang?",
+    options: [
+      "Joglo",
+      "Gonjong",
+      "Pendopo",
+      "Candi"
+    ],
+    answer: 1,
+    explanation:
+      "Bagian atap yang melengkung dan meruncing disebut gonjong."
+  },
+
+  {
+    question: "Mengapa budaya tradisional perlu dilestarikan?",
+    options: [
+      "Agar budaya dilupakan",
+      "Agar semua daerah sama",
+      "Agar warisan budaya tetap dikenal generasi berikutnya",
+      "Agar masyarakat berhenti belajar"
+    ],
+    answer: 2,
+    explanation:
+      "Pelestarian budaya membantu menjaga warisan agar dikenal generasi berikutnya."
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const feedbackEl = document.getElementById("feedback");
+const nextBtn = document.getElementById("nextBtn");
+
+function startQuest() {
+  document.getElementById("explore").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+function toggleExtra(id, button) {
+  const content = document.getElementById(id);
+  const isOpen = content.classList.toggle("show");
+
+  button.textContent = isOpen
+    ? "Tutup penjelasan ↑"
+    : "Baca selengkapnya ↓";
+}
+
+function beginQuiz() {
+  currentQuestion = 0;
+  score = 0;
+
+  document.getElementById("totalScore").textContent = score;
+  document.getElementById("quizContent").style.display = "block";
+  document.getElementById("result").style.display = "none";
+
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+
+  const item = questions[currentQuestion];
+
+  document.getElementById("questionNumber").textContent =
+    `Pertanyaan ${currentQuestion + 1} dari ${questions.length}`;
+
+  document.getElementById("progressBar").style.width =
+    `${(currentQuestion / questions.length) * 100}%`;
+
+  questionEl.textContent = item.question;
+  answersEl.innerHTML = "";
+  feedbackEl.textContent = "";
+  nextBtn.style.display = "none";
+
+  document.getElementById("currentPoints").textContent =
+    `Poin: ${score}`;
+
+  item.options.forEach((option, index) => {
+    const button = document.createElement("button");
+
+    button.className = "answer";
+    button.textContent =
+      `${String.fromCharCode(65 + index)}. ${option}`;
+
+    button.addEventListener("click", () => {
+      selectAnswer(index, button);
+    });
+
+    answersEl.appendChild(button);
+  });
+}
+
+function selectAnswer(index, selectedButton) {
+  if (answered) return;
+
+  answered = true;
+
+  const item = questions[currentQuestion];
+  const buttons = answersEl.querySelectorAll(".answer");
+
+  buttons.forEach(button => {
+    button.disabled = true;
+  });
+
+  if (index === item.answer) {
+    score += 10;
+    selectedButton.classList.add("correct");
+    feedbackEl.style.color = "var(--green)";
+    feedbackEl.textContent = "Benar! " + item.explanation;
+  } else {
+    selectedButton.classList.add("wrong");
+    buttons[item.answer].classList.add("correct");
+    feedbackEl.style.color = "var(--red)";
+    feedbackEl.textContent = "Belum tepat. " + item.explanation;
+  }
+
+  document.getElementById("totalScore").textContent = score;
+  document.getElementById("currentPoints").textContent =
+    `Poin: ${score}`;
+
+  nextBtn.textContent =
+    currentQuestion === questions.length - 1
+      ? "Lihat Hasil →"
+      : "Berikutnya →";
+
+  nextBtn.style.display = "inline-block";
+}
+
+function nextQuestion() {
+  if (!answered) return;
+
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("progressBar").style.width = "100%";
+  document.getElementById("quizContent").style.display = "none";
+  document.getElementById("result").style.display = "block";
+
+  let title = "Terus Berlatih!";
+  let message = "Baca kembali materi budaya dan coba lagi.";
+
+  if (score === 50) {
+    title = "🏆 Ahli Budaya!";
+    message = "Sempurna! Semua jawabanmu benar.";
+  } else if (score >= 30) {
+    title = "🌟 Penjelajah Hebat!";
+    message = "Bagus! Kamu sudah memahami sebagian besar materi.";
+  }
+
+  document.getElementById("resultTitle").textContent = title;
+
+  document.getElementById("resultText").textContent =
+    `${message} Skor akhir: ${score} dari 50 poin.`;
+}
+
+function restartQuiz() {
+  beginQuiz();
+
+  document.getElementById("quiz").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+beginQuiz();
+</script>
+
+</body>
+</html>
