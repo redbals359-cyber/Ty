@@ -1,0 +1,638 @@
+l
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Culture Quest — Tari Adventure</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101827;
+  color: white;
+}
+
+header {
+  padding: 20px;
+  text-align: center;
+  background: #172338;
+  border-bottom: 2px solid #e9bd65;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  color: #f4cd78;
+}
+
+header p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.container {
+  width: min(700px, 94%);
+  margin: 20px auto;
+}
+
+.panel {
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #1c293d;
+  border: 1px solid #35445b;
+  border-radius: 15px;
+}
+
+button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #e9bd65;
+  color: #172338;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+
+#startButton {
+  width: 100%;
+  font-size: 16px;
+}
+
+/* ARENA GAME */
+#gameArea {
+  display: none;
+}
+
+#arena {
+  position: relative;
+  width: 100%;
+  height: 390px;
+  overflow: hidden;
+  border: 3px solid #789a66;
+  border-radius: 15px;
+  background: linear-gradient(
+    to bottom,
+    #b8deef 0%,
+    #d9edf4 42%,
+    #a7cd8b 42%,
+    #79a965 100%
+  );
+  touch-action: pan-y;
+}
+
+.cloud {
+  position: absolute;
+  font-size: 30px;
+}
+
+.tree {
+  position: absolute;
+  font-size: 38px;
+}
+
+.groundPath {
+  position: absolute;
+  bottom: -70px;
+  left: 32%;
+  width: 36%;
+  height: 210px;
+  background: #ddc59c;
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+
+/* KARAKTER DARI GAMBAR RAW */
+#character {
+  position: absolute;
+  left: 50%;
+  top: 65%;
+  width: 105px;
+  height: 130px;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+#character.moving {
+  filter: drop-shadow(0 5px 3px #0003);
+}
+
+#character.moving.left {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+#character.moving.right {
+  transform: translate(-50%, -50%);
+}
+
+.destination {
+  position: absolute;
+  right: 5%;
+  top: 23%;
+  width: 115px;
+  padding: 8px;
+  text-align: center;
+  border-radius: 12px;
+  background: #fff;
+  color: #172338;
+  z-index: 2;
+}
+
+.destination img {
+  width: 100%;
+  height: 90px;
+  object-fit: contain;
+}
+
+.destination strong {
+  display: block;
+  font-size: 12px;
+}
+
+#gameMessage {
+  min-height: 40px;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #25354b;
+  color: #f4d58f;
+  font-size: 14px;
+}
+
+/* KONTROL ANALOG */
+.controlArea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.controlText {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d1d9e5;
+}
+
+#joystick {
+  position: relative;
+  width: 125px;
+  height: 125px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid #ffffff66;
+  background: #ffffff18;
+  touch-action: none;
+  user-select: none;
+}
+
+#stick {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  top: 36px;
+  left: 36px;
+  border-radius: 50%;
+  background: #f4cd78;
+  border: 3px solid #fff;
+  box-shadow: 0 3px 10px #0004;
+  pointer-events: none;
+}
+
+#joystick.disabled {
+  opacity: 0.5;
+}
+
+#keyboardInfo {
+  margin-top: 10px;
+  color: #aebed2;
+  font-size: 12px;
+}
+
+#cultureInfo {
+  display: none;
+  line-height: 1.7;
+}
+
+#cultureInfo h2 {
+  color: #f4cd78;
+}
+
+#resetButton {
+  width: 100%;
+  margin-top: 12px;
+}
+
+footer {
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #9eacc0;
+}
+
+@media (max-width: 400px) {
+  #arena {
+    height: 350px;
+  }
+
+  #character {
+    width: 90px;
+    height: 115px;
+  }
+
+  .destination {
+    width: 100px;
+  }
+
+  #joystick {
+    width: 112px;
+    height: 112px;
+  }
+
+  #stick {
+    top: 29px;
+    left: 29px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌿 CULTURE QUEST</h1>
+  <p>Jelajahi budaya Indonesia sambil bermain!</p>
+</header>
+
+<main class="container">
+
+  <section class="panel" id="intro">
+    <h2>Selamat Datang, Penjelajah!</h2>
+    <p>
+      Jadilah penjelajah budaya. Gerakkan karakter tari
+      menggunakan analog virtual dan temukan objek budaya.
+    </p>
+
+    <button id="startButton">▶ Masuk ke Dunia Budaya</button>
+  </section>
+
+  <section class="panel" id="gameArea">
+
+    <h3>🗺️ Misi: Temukan Rumah Gadang</h3>
+
+    <div id="arena">
+
+      <span class="cloud" style="top:7%;left:12%">☁️</span>
+      <span class="cloud" style="top:12%;left:45%">☁️</span>
+
+      <span class="tree" style="left:5%;top:36%">🌳</span>
+      <span class="tree" style="left:7%;top:65%">🌴</span>
+      <span class="tree" style="right:5%;top:65%">🌳</span>
+
+      <div class="groundPath"></div>
+
+      <!-- GAMBAR KARAKTER DARI RAW GITHUB -->
+      <img
+        id="character"
+        src="https://raw.githubusercontent.com/redbals359-cyber/Ty/main/1791984857152.png"
+        alt="Karakter tari tradisional"
+        draggable="false"
+      >
+
+      <!-- TUJUAN MISI: RUMAH GADANG -->
+      <div class="destination">
+        <img
+          src="https://raw.githubusercontent.com/redbals359-cyber/Ty/main/eb7155ad2d8a5e1de228e78d26e655cf.jpg"
+          alt="Rumah Gadang"
+        >
+        <strong>🏠 Rumah Gadang</strong>
+      </div>
+
+    </div>
+
+    <div id="gameMessage" aria-live="polite">
+      Tekan analog untuk menggerakkan karakter.
+    </div>
+
+    <div class="controlArea">
+
+      <div class="controlText">
+        <strong>🎮 ANALOG VIRTUAL</strong>
+        <div>⬆️ Bergerak ke atas</div>
+        <div>⬇️ Bergerak ke bawah</div>
+        <div>⬅️ Bergerak ke kiri</div>
+        <div>➡️ Bergerak ke kanan</div>
+      </div>
+
+      <div id="joystick" class="disabled"
+           role="application" aria-label="Analog virtual">
+        <div id="stick"></div>
+      </div>
+
+    </div>
+
+    <div id="keyboardInfo">
+      Kamu juga bisa menggunakan tombol panah pada keyboard.
+    </div>
+
+    <button id="resetButton">🔄 Ulangi Permainan</button>
+
+  </section>
+
+  <section class="panel" id="cultureInfo">
+    <h2>🎉 Misi Berhasil!</h2>
+    <p>
+      Kamu berhasil menemukan Rumah Gadang, rumah adat
+      masyarakat Minangkabau dari Sumatera Barat.
+    </p>
+    <p>
+      Ciri khasnya adalah atap melengkung dengan ujung runcing
+      yang disebut <strong>gonjong</strong>.
+    </p>
+    <button id="backButton">Kembali ke Permainan</button>
+  </section>
+
+</main>
+
+<footer>
+  Culture Quest · Belajar Budaya dengan Cara Menyenangkan
+</footer>
+
+<script>
+const startButton = document.getElementById("startButton");
+const intro = document.getElementById("intro");
+const gameArea = document.getElementById("gameArea");
+const arena = document.getElementById("arena");
+const character = document.getElementById("character");
+const joystick = document.getElementById("joystick");
+const stick = document.getElementById("stick");
+const gameMessage = document.getElementById("gameMessage");
+const cultureInfo = document.getElementById("cultureInfo");
+const resetButton = document.getElementById("resetButton");
+const backButton = document.getElementById("backButton");
+
+let playing = false;
+let x = 0;
+let y = 0;
+let moveX = 0;
+let moveY = 0;
+let pointerId = null;
+let animationId = null;
+let lastTime = 0;
+let missionComplete = false;
+
+const speed = 180;
+
+function setCharacterPosition() {
+  const halfW = character.offsetWidth / 2;
+  const halfH = character.offsetHeight / 2;
+
+  x = Math.max(halfW, Math.min(arena.clientWidth - halfW, x));
+  y = Math.max(halfH, Math.min(arena.clientHeight - halfH, y));
+
+  character.style.left = x + "px";
+  character.style.top = y + "px";
+}
+
+function placeCharacter() {
+  x = arena.clientWidth * 0.25;
+  y = arena.clientHeight * 0.72;
+  setCharacterPosition();
+}
+
+function startGame() {
+  intro.style.display = "none";
+  cultureInfo.style.display = "none";
+  gameArea.style.display = "block";
+
+  playing = true;
+  missionComplete = false;
+
+  joystick.classList.remove("disabled");
+
+  gameMessage.textContent =
+    "Gerakkan karakter tari menuju gambar Rumah Gadang!";
+
+  placeCharacter();
+
+  lastTime = performance.now();
+
+  if (animationId === null) {
+    animationId = requestAnimationFrame(gameLoop);
+  }
+}
+
+function gameLoop(time) {
+  if (!playing) {
+    animationId = null;
+    return;
+  }
+
+  const delta = Math.min((time - lastTime) / 1000 || 0, 0.05);
+  lastTime = time;
+
+  if (moveX !== 0 || moveY !== 0) {
+    x += moveX * speed * delta;
+    y += moveY * speed * delta;
+
+    setCharacterPosition();
+
+    character.classList.add("moving");
+
+    if (moveX < -0.1) {
+      character.classList.add("left");
+      character.classList.remove("right");
+    } else if (moveX > 0.1) {
+      character.classList.add("right");
+      character.classList.remove("left");
+    }
+
+    checkDestination();
+  } else {
+    character.classList.remove("moving");
+  }
+
+  animationId = requestAnimationFrame(gameLoop);
+}
+
+function checkDestination() {
+  if (missionComplete) return;
+
+  const target = document.querySelector(".destination");
+
+  const charRect = character.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+
+  const charX = charRect.left + charRect.width / 2;
+  const charY = charRect.top + charRect.height / 2;
+  const targetX = targetRect.left + targetRect.width / 2;
+  const targetY = targetRect.top + targetRect.height / 2;
+
+  const distance = Math.hypot(
+    charX - targetX,
+    charY - targetY
+  );
+
+  if (distance < 105) {
+    missionComplete = true;
+    playing = false;
+    moveX = 0;
+    moveY = 0;
+
+    joystick.classList.add("disabled");
+    cultureInfo.style.display = "block";
+
+    gameMessage.textContent = "🎉 Kamu berhasil menyelesaikan misi!";
+
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+}
+
+function resetGame() {
+  playing = false;
+  missionComplete = false;
+
+  moveX = 0;
+  moveY = 0;
+  pointerId = null;
+
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  stick.style.transform = "translate(0, 0)";
+  character.classList.remove("moving", "left", "right");
+
+  startGame();
+}
+
+startButton.addEventListener("click", startGame);
+
+resetButton.addEventListener("click", resetGame);
+
+backButton.addEventListener("click", () => {
+  cultureInfo.style.display = "none";
+  playing = true;
+  missionComplete = false;
+  joystick.classList.remove("disabled");
+  gameMessage.textContent = "Lanjutkan petualanganmu!";
+  lastTime = performance.now();
+
+  if (animationId === null) {
+    animationId = requestAnimationFrame(gameLoop);
+  }
+});
+
+function updateJoystick(event) {
+  if (pointerId !== event.pointerId || !playing) return;
+
+  const rect = joystick.getBoundingClientRect();
+
+  let dx = event.clientX - (rect.left + rect.width / 2);
+  let dy = event.clientY - (rect.top + rect.height / 2);
+
+  const maxDistance = 34;
+  const distance = Math.hypot(dx, dy);
+
+  if (distance > maxDistance) {
+    dx = dx / distance * maxDistance;
+    dy = dy / distance * maxDistance;
+  }
+
+  stick.style.transform = `translate(${dx}px, ${dy}px)`;
+
+  moveX = dx / maxDistance;
+  moveY = dy / maxDistance;
+}
+
+joystick.addEventListener("pointerdown", event => {
+  if (!playing) {
+    gameMessage.textContent = "Tekan Masuk ke Dunia Budaya dahulu.";
+    return;
+  }
+
+  pointerId = event.pointerId;
+  joystick.setPointerCapture(pointerId);
+  updateJoystick(event);
+});
+
+joystick.addEventListener("pointermove", updateJoystick);
+
+function releaseJoystick(event) {
+  if (pointerId !== event.pointerId) return;
+
+  pointerId = null;
+  moveX = 0;
+  moveY = 0;
+
+  stick.style.transform = "translate(0, 0)";
+}
+
+joystick.addEventListener("pointerup", releaseJoystick);
+joystick.addEventListener("pointercancel", releaseJoystick);
+
+document.addEventListener("keydown", event => {
+  if (!playing) return;
+
+  const keys = {
+    ArrowUp: [0, -1],
+    ArrowDown: [0, 1],
+    ArrowLeft: [-1, 0],
+    ArrowRight: [1, 0]
+  };
+
+  if (keys[event.key]) {
+    event.preventDefault();
+    moveX = keys[event.key][0];
+    moveY = keys[event.key][1];
+
+    const length = Math.hypot(moveX, moveY);
+
+    if (length > 1) {
+      moveX /= length;
+      moveY /= length;
+    }
+  }
+});
+
+document.addEventListener("keyup", event => {
+  if (event.key.startsWith("Arrow")) {
+    moveX = 0;
+    moveY = 0;
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (gameArea.style.display !== "none") {
+    setCharacterPosition();
+  }
+});
+
+character.addEventListener("error", () => {
+  gameMessage.textContent =
+    "Gambar karakter gagal dimuat. Periksa link Raw GitHub.";
+});
+</script>
+
+</body>
+</html>
